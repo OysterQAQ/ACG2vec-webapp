@@ -7,5 +7,6 @@ package dev.cheerfun.deepix.constant;
  * @description MilvusInfo
  */
 public class MilvusInfo {
-    public static final String COLLECTION = "illust";
+    public static final String DEEPIX_COLLECTION_NAME = "deepix";
+    public static final Integer DEEPIX_DIMENSION = 1536;
 }

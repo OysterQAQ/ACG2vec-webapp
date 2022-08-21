@@ -20,7 +20,7 @@ public class MilvusConfig {
     @Value("${milvus.port}")
     private Integer port;
 
-    @Bean
+    //@Bean
     public MilvusClient milvusClient() {
         try {
             ConnectParam connectParam = new ConnectParam.Builder().withHost(host).withPort(port).build();

@@ -1,7 +1,6 @@
 package dev.cheerfun.deepix.service;
 
 import com.google.gson.JsonObject;
-
 import dev.cheerfun.deepix.constant.MilvusInfo;
 import dev.cheerfun.deepix.exception.BaseException;
 import io.milvus.client.*;
@@ -20,9 +19,9 @@ import java.util.stream.Collectors;
  * @author OysterQAQ
  * @version 1.0
  * @date 2021/5/6 11:02 PM
- * @description MilvusService
+ * @description Milvus初始化、检测、交互
  */
-@Service
+//@Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MilvusService {
@@ -31,28 +30,23 @@ public class MilvusService {
     @PostConstruct
     public void init() {
         try {
-            String collectionName = MilvusInfo.COLLECTION;
-            //client.flush(collectionName);
-            //client.dropCollection(collectionName);
-/*        if (!hasCollection(collectionName)) {
-            createCollection(collectionName, 512, 2048);
-            createIndexForCollection(collectionName, IndexType.IVFLAT, 4000 * 4145*4);
-        }*/
-            log.info("当前集合内实体总数为：" + client.countEntities(collectionName).getCollectionEntityCount());
-            Response getCollectionStatsResponse = client.getCollectionStats(collectionName);
-            if (getCollectionStatsResponse.ok()) {
-                // Collection info is sent back with JSON type string
-                String jsonString = getCollectionStatsResponse.getMessage();
-                System.out.format("Collection Stats: %s\n", jsonString);
-                GetIndexInfoResponse getIndexInfoResponse = client.getIndexInfo(collectionName);
-                System.out.format("Index Info: %s\n", getIndexInfoResponse.getIndex().get().toString());
+            if (!hasCollection(MilvusInfo.DEEPIX_COLLECTION_NAME)) {
+                log.info("milvus向量索引进行首次创建");
+                createCollection(MilvusInfo.DEEPIX_COLLECTION_NAME, 1536, 2048);
+                createIndexForCollection(MilvusInfo.DEEPIX_COLLECTION_NAME, IndexType.IVF_SQ8, 4000 * 4145 * 4);
+                log.info("milvus向量索引首次创建成功");
             }
-            ListPartitionsResponse listPartitionsResponse = client.listPartitions(collectionName);
-            System.out.println(listPartitionsResponse.getPartitionList());
-        }catch (Exception  e){
-
+            log.info("当前集合内实体总数为：" + client.countEntities(MilvusInfo.DEEPIX_COLLECTION_NAME).getCollectionEntityCount());
+            Response getCollectionStatsResponse = client.getCollectionStats(MilvusInfo.DEEPIX_COLLECTION_NAME);
+            if (getCollectionStatsResponse.ok()) {
+                log.info("Collection Stats:" + getCollectionStatsResponse.getMessage());
+                log.info("Index Info:" + client.getIndexInfo(MilvusInfo.DEEPIX_COLLECTION_NAME).getIndex().get());
+            }
+            log.info("milvus服务初始化成功");
+        } catch (Exception e) {
+            log.error("milvus服务初始化失败");
+            e.printStackTrace();
         }
-
 
     }
 
@@ -89,7 +83,7 @@ public class MilvusService {
         JsonObject searchParamsJson = new JsonObject();
         searchParamsJson.addProperty("nprobe", 256);
         SearchParam searchParam =
-                new SearchParam.Builder(MilvusInfo.COLLECTION)
+                new SearchParam.Builder(MilvusInfo.DEEPIX_COLLECTION_NAME)
                         .withFloatVectors(Collections.singletonList(normalizeVector(vector)))
                         .withTopK(k)
                         .withParamsInJson(searchParamsJson.toString())
@@ -106,11 +100,11 @@ public class MilvusService {
     }
 
     //将特征向量存入Milvus
-    public Boolean saveIllustFeatureToMilvus(Long illustId, List<List<Float>> imageFeatureList, String collectionName) {
+    public Boolean saveIllustFeatureToMilvus(Long featureId, List<List<Float>> imageFeatureList, String collectionName) {
         imageFeatureList =
                 imageFeatureList.stream().map(this::normalizeVector).collect(Collectors.toList());
         InsertParam insertParam =
-                new InsertParam.Builder(collectionName).withFloatVectors(imageFeatureList).withVectorIds(Collections.nCopies(imageFeatureList.size(), illustId)).build();
+                new InsertParam.Builder(collectionName).withFloatVectors(imageFeatureList).withVectorIds(Collections.nCopies(imageFeatureList.size(), featureId)).build();
         client.insert(insertParam);
         return true;
     }

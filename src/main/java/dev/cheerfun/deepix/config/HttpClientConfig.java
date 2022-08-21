@@ -50,10 +50,7 @@ public class HttpClientConfig {
         sc.init(null, trustAllCertificates, new SecureRandom());
         return HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
-//                .sslParameters(sslParams)
-//                .sslContext(sc)
                 .connectTimeout(Duration.ofSeconds(30))
-                //          .proxy(ProxySelector.of(new InetSocketAddress("127.0.0.1", 8888)))
                 .executor(httpclientExecutorService)
                 .followRedirects(HttpClient.Redirect.NEVER)
                 .build();
@@ -70,7 +67,6 @@ public class HttpClientConfig {
                 .version(HttpClient.Version.HTTP_1_1)
                 .sslParameters(sslParams)
                 .sslContext(sc)
-                //   .proxy(ProxySelector.of(new InetSocketAddress("127.0.0.1", 1080)))
                 .executor(httpclientExecutorService)
                 .followRedirects(HttpClient.Redirect.NEVER)
                 .build();

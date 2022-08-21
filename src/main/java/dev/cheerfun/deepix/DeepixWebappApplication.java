@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching(mode = AdviceMode.ASPECTJ)
 @EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
 @EnableLoadTimeWeaving(aspectjWeaving = EnableLoadTimeWeaving.AspectJWeaving.ENABLED)
-public class Demo2deepixWebappApplication {
+public class DeepixWebappApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Demo2deepixWebappApplication.class, args);
+        SpringApplication.run(DeepixWebappApplication.class, args);
     }
 
 }
