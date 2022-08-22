@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Data
 public class ImageReverseSearchItem {
-    String itemId;
+    Integer itemId;
     List<Float> feature;
     Map<String,Object> extendInfo;
 

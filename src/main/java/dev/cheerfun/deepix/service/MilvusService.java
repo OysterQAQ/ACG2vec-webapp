@@ -2,6 +2,7 @@ package dev.cheerfun.deepix.service;
 
 import com.google.gson.JsonObject;
 import dev.cheerfun.deepix.constant.MilvusInfo;
+import dev.cheerfun.deepix.domain.ImageReverseSearchItem;
 import dev.cheerfun.deepix.exception.BaseException;
 import io.milvus.client.*;
 import lombok.RequiredArgsConstructor;
@@ -100,11 +101,13 @@ public class MilvusService {
     }
 
     //将特征向量存入Milvus
-    public Boolean saveIllustFeatureToMilvus(Long featureId, List<List<Float>> imageFeatureList, String collectionName) {
-        imageFeatureList =
-                imageFeatureList.stream().map(this::normalizeVector).collect(Collectors.toList());
-        InsertParam insertParam =
-                new InsertParam.Builder(collectionName).withFloatVectors(imageFeatureList).withVectorIds(Collections.nCopies(imageFeatureList.size(), featureId)).build();
+    public Boolean saveFeatureToMilvus(ImageReverseSearchItem imageReverseSearchItem) {
+        imageReverseSearchItem.setFeature(normalizeVector(imageReverseSearchItem.getFeature()));
+         InsertParam.Builder builder = new InsertParam.Builder(MilvusInfo.DEEPIX_COLLECTION_NAME).withFloatVectors(Collections.singletonList(imageReverseSearchItem.getFeature()));
+        if(imageReverseSearchItem.getItemId()!=null){
+          builder = builder.withVectorIds(Collections.singletonList((imageReverseSearchItem.getItemId().longValue())));
+        }
+        InsertParam insertParam = builder.build();
         client.insert(insertParam);
         return true;
     }
@@ -116,4 +119,9 @@ public class MilvusService {
         return vector;
     }
 
+    public void deleteFeature(Integer imageId) {
+        Response deleteByIdsResponse =
+                client.deleteEntityByID(MilvusInfo.DEEPIX_COLLECTION_NAME, "",Collections.singletonList(imageId.longValue()));
+        client.flush(MilvusInfo.DEEPIX_COLLECTION_NAME);
+    }
 }

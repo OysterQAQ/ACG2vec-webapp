@@ -26,7 +26,7 @@ public class FeatureExtractService {
 
 
 
-    public Float[] generateImageFeatureForReverseImageSearch(InputStream inputStream) throws IOException, InterruptedException {
+    public Float[] generateImageFeature(InputStream inputStream) throws IOException, InterruptedException {
         return tfServingService.requestForFeatureExtract(imageLoadUtil.loadImage(inputStream));
     }
 
