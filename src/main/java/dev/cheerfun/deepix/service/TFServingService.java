@@ -1,11 +1,8 @@
 package dev.cheerfun.deepix.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.cheerfun.deepix.constant.MilvusInfo;
 import dev.cheerfun.deepix.constant.TFServingInfo;
 import dev.cheerfun.deepix.domain.Predictions;
-import io.milvus.client.IndexType;
-import io.milvus.client.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.nd4j.linalg.api.ndarray.INDArray;

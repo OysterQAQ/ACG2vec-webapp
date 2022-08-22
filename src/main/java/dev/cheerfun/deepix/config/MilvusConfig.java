@@ -4,7 +4,6 @@ import io.milvus.client.ConnectParam;
 import io.milvus.client.MilvusClient;
 import io.milvus.client.MilvusGrpcClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**

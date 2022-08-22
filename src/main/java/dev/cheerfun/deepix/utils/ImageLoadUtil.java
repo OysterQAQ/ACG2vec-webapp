@@ -2,10 +2,7 @@ package dev.cheerfun.deepix.utils;
 
 import dev.cheerfun.deepix.exception.BaseException;
 import org.datavec.image.loader.NativeImageLoader;
-import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.impl.broadcast.BroadcastSubOp;
-import org.nd4j.linalg.factory.Nd4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 

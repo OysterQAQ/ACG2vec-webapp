@@ -6,11 +6,8 @@ import dev.cheerfun.deepix.domain.ImageReverseSearchItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * @author OysterQAQ

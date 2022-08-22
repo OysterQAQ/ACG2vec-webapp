@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
