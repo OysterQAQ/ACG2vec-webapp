@@ -101,11 +101,15 @@
         </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.datavec/datavec-data-image -->
         <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
+        <dependency>
             <groupId>org.datavec</groupId>
             <artifactId>datavec-data-image</artifactId>
-            <version>1.0.0-M2</version>
+            <version>1.0.0-beta7</version>
         </dependency>
-
     </dependencies>
 
     <build>

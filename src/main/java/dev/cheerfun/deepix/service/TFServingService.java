@@ -1,7 +1,9 @@
 package dev.cheerfun.deepix.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.cheerfun.deepix.constant.TFServingInfo;
+import dev.cheerfun.deepix.domain.ImageLabelPrediction;
 import dev.cheerfun.deepix.domain.Predictions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,23 +55,25 @@ public class TFServingService {
         log.info(body);
     }
 
-    public Float[] requestForFeatureExtract(INDArray image) throws IOException, InterruptedException {
-        return request(image, TFServingInfo.FEATURE_EXTRACT_MODEL)[0];
+    public Predictions<Float[]> requestForFeatureExtract(INDArray image) throws IOException, InterruptedException {
+        return objectMapper.readValue(request(image, TFServingInfo.FEATURE_EXTRACT_MODEL), new TypeReference<Predictions<Float[]>>() {
+        });
     }
 
-    public Float[][] requestForLabelPredict(INDArray image) throws IOException, InterruptedException {
-        return request(image, TFServingInfo.LABEL_PREDICT_MODEL);
+    public Predictions<ImageLabelPrediction> requestForLabelPredict(INDArray image) throws IOException, InterruptedException {
+        return objectMapper.readValue( request(image, TFServingInfo.LABEL_PREDICT_MODEL), new TypeReference<Predictions<ImageLabelPrediction>>() {
+        });
     }
 
-    public Float[][] request(INDArray image, String modelName) throws IOException, InterruptedException {
+    public String request(INDArray image, String modelName) throws IOException, InterruptedException {
         long l = System.currentTimeMillis();
         URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + modelName + ":predict");
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri).POST(HttpRequest.BodyPublishers.ofString("{\"instances\":" + image.toStringFull() + "}")).build();
         String body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        Predictions predictions = objectMapper.readValue(body, Predictions.class);
+        System.out.println(body);
         log.info("本次抽取耗时" + (System.currentTimeMillis() - l) / 1000F + "秒");
-        return predictions.getPredictions();
+        return body;
     }
 
 }

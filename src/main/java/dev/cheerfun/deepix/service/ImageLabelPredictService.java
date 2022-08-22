@@ -1,6 +1,8 @@
 package dev.cheerfun.deepix.service;
 
 import dev.cheerfun.deepix.domain.ImageLabelPredictResult;
+import dev.cheerfun.deepix.domain.ImageLabelPrediction;
+import dev.cheerfun.deepix.domain.Predictions;
 import dev.cheerfun.deepix.utils.ImageLoadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,14 +56,15 @@ public class ImageLabelPredictService {
     }
 
     public ImageLabelPredictResult predict(InputStream inputStream) throws IOException, InterruptedException {
-        final Float[][] floats = tfServingService.requestForLabelPredict(imageLoadUtil.loadImage(inputStream));
+        final Predictions<ImageLabelPrediction> predictions = tfServingService.requestForLabelPredict(imageLoadUtil.loadImage(inputStream));
+        ImageLabelPrediction prediction=predictions.getPredictions().get(0);
         final ImageLabelPredictResult imageLabelPredictResult = new ImageLabelPredictResult();
-        imageLabelPredictResult.setBookmark(bookmarkLevelList.get(findMaxIndex(floats[0])));
-        imageLabelPredictResult.setView(viewLevelList.get(findMaxIndex(floats[1])));
-        imageLabelPredictResult.setSanity(sanityLevelList.get(findMaxIndex(floats[2])));
-        imageLabelPredictResult.setRestrict(restrictLevelList.get(findMaxIndex(floats[3])));
-        imageLabelPredictResult.setXRestrict(xRestrictLevelList.get(findMaxIndex(floats[4])));
-        imageLabelPredictResult.setTagList(findIndexAbove(floats[5], 0.5F).stream().map(i -> tagList.get(i)).collect(Collectors.toList()));
+        imageLabelPredictResult.setBookmark(bookmarkLevelList.get(findMaxIndex(prediction.getBookmarkPredict())));
+        imageLabelPredictResult.setView(viewLevelList.get(findMaxIndex(prediction.getViewPredict())));
+        imageLabelPredictResult.setSanity(sanityLevelList.get(findMaxIndex(prediction.getSanityPredict())));
+        imageLabelPredictResult.setRestrict(restrictLevelList.get(findMaxIndex(prediction.getRestrictPredict())));
+        imageLabelPredictResult.setXRestrict(xRestrictLevelList.get(findMaxIndex(prediction.getXRestrictPredict())));
+        imageLabelPredictResult.setTagList(findIndexAbove(prediction.getTagPredict(), 0.3F).stream().map(i -> tagList.get(i)).collect(Collectors.toList()));
         return imageLabelPredictResult;
 
     }

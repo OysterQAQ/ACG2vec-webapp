@@ -1,6 +1,10 @@
 package dev.cheerfun.deepix.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * @author OysterQAQ
@@ -9,7 +13,10 @@ import lombok.Data;
  * @description Predictions
  */
 @Data
-public class Predictions {
-    Float[][] predictions;
+@AllArgsConstructor
+@NoArgsConstructor
+public class Predictions<T> {
+
+    List<T> predictions;
 
 }

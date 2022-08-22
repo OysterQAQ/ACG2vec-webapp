@@ -67,6 +67,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = FileUploadException.class)
     public ResponseEntity<Result> handleFileUploadException(FileUploadException e, HttpServletRequest request) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Result("上传出现错误"));
     }
 

@@ -24,7 +24,7 @@ public class FeatureExtractService {
     private final ImageLoadUtil imageLoadUtil;
 
     public Float[] generateImageFeature(InputStream inputStream) throws IOException, InterruptedException {
-        return tfServingService.requestForFeatureExtract(imageLoadUtil.loadImage(inputStream));
+        return tfServingService.requestForFeatureExtract(imageLoadUtil.loadImage(inputStream)).getPredictions().get(0);
     }
 
 }
