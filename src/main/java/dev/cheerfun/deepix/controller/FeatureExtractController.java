@@ -29,11 +29,9 @@ import java.util.List;
 public class FeatureExtractController {
     private final FeatureExtractService featureExtractService;
 
-
     @PostMapping("/images/features")
     public ResponseEntity<Result<Float[]>> generateImageFeature(@RequestParam("file") MultipartFile file) throws IOException, InterruptedException {
-        return ResponseEntity.ok().body(new Result<>("获取图片特征向量成功",featureExtractService.generateImageFeature(file.getInputStream())));
+        return ResponseEntity.ok().body(new Result<>("获取图片特征向量成功", featureExtractService.generateImageFeature(file.getInputStream())));
     }
-
 
 }

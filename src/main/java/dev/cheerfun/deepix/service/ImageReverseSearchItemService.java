@@ -26,27 +26,24 @@ public class ImageReverseSearchItemService {
     private final StringRedisTemplate stringRedisTemplate;
     private final ObjectMapper objectMapper;
 
-
     public void addImageReverseSearchItem(ImageReverseSearchItem imageReverseSearchItem) throws JsonProcessingException {
         imageReverseSearchItem.setFeature(null);
-        stringRedisTemplate.opsForValue().set(String.valueOf(imageReverseSearchItem.getItemId()),objectMapper.writeValueAsString(imageReverseSearchItem));
+        stringRedisTemplate.opsForValue().set(String.valueOf(imageReverseSearchItem.getItemId()), objectMapper.writeValueAsString(imageReverseSearchItem));
     }
 
-
-    public void deleteImageReverseSearchItemById(Integer id){
+    public void deleteImageReverseSearchItemById(Integer id) {
         stringRedisTemplate.delete(String.valueOf(id));
     }
 
     public void updateImageReverseSearchItemById(ImageReverseSearchItem imageReverseSearchItem) throws JsonProcessingException {
         imageReverseSearchItem.setFeature(null);
-        stringRedisTemplate.opsForValue().set(String.valueOf(imageReverseSearchItem.getItemId()),objectMapper.writeValueAsString(imageReverseSearchItem));
+        stringRedisTemplate.opsForValue().set(String.valueOf(imageReverseSearchItem.getItemId()), objectMapper.writeValueAsString(imageReverseSearchItem));
     }
-
 
     //@Cacheable("IRSItem")
     public ImageReverseSearchItem getImageReverseSearchItemById(Integer id) throws JsonProcessingException {
         final String entries = stringRedisTemplate.opsForValue().get(id);
-        return objectMapper.readValue(entries,ImageReverseSearchItem.class);
+        return objectMapper.readValue(entries, ImageReverseSearchItem.class);
     }
 
     public Boolean checkImageReverseSearchItemById(Integer id) {
@@ -79,6 +76,5 @@ public class ImageReverseSearchItemService {
     public Boolean checkImageReverseSearchItemById(String id) {
         return stringRedisTemplate.hasKey(id);
     }*/
-
 
 }

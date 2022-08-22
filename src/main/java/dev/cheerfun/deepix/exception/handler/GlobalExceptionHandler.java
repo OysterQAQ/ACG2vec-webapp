@@ -1,6 +1,5 @@
 package dev.cheerfun.deepix.exception.handler;
 
-
 import dev.cheerfun.deepix.domain.Result;
 import dev.cheerfun.deepix.exception.BaseException;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
-
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,13 +36,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Result("输入参数中存在错误", e.getMessage()));
     }
 
-
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<Result> handleIllegalArgumentException(IllegalArgumentException e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Result("参数错误"));
     }
-
 
     @ExceptionHandler(value = NumberFormatException.class)
     public ResponseEntity<Result> handleNumberFormatException(NumberFormatException e) {
@@ -69,6 +65,7 @@ public class GlobalExceptionHandler {
         System.out.println("请求超时");
         return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new Result("请求超时"));
     }
+
     @ExceptionHandler(value = FileUploadException.class)
     public ResponseEntity<Result> handleFileUploadException(FileUploadException e, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Result("上传出现错误"));

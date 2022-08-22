@@ -28,7 +28,6 @@ public class ExecutorServiceConfig {
         );
     }
 
-
     @Bean(name = "httpclientExecutorService")
     public ExecutorService httpclientExecutorService() {
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("httpclient-pool-%d").build();

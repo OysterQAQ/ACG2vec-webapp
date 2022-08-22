@@ -15,6 +15,6 @@ import java.util.Map;
 public class ImageReverseSearchItem {
     Integer itemId;
     List<Float> feature;
-    Map<String,Object> extendInfo;
+    Map<String, Object> extendInfo;
 
 }

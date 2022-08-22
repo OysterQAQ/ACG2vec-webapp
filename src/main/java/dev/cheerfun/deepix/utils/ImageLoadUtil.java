@@ -21,8 +21,6 @@ import java.io.InputStream;
 @Component
 public class ImageLoadUtil {
 
-
-
     public INDArray loadImage(InputStream inputStream) {
         try {
             INDArray image = new NativeImageLoader(299, 299, 3).asMatrix(inputStream, false);

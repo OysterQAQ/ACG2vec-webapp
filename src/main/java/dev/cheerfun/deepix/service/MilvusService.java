@@ -103,9 +103,9 @@ public class MilvusService {
     //将特征向量存入Milvus
     public Boolean saveFeatureToMilvus(ImageReverseSearchItem imageReverseSearchItem) {
         imageReverseSearchItem.setFeature(normalizeVector(imageReverseSearchItem.getFeature()));
-         InsertParam.Builder builder = new InsertParam.Builder(MilvusInfo.DEEPIX_COLLECTION_NAME).withFloatVectors(Collections.singletonList(imageReverseSearchItem.getFeature()));
-        if(imageReverseSearchItem.getItemId()!=null){
-          builder = builder.withVectorIds(Collections.singletonList((imageReverseSearchItem.getItemId().longValue())));
+        InsertParam.Builder builder = new InsertParam.Builder(MilvusInfo.DEEPIX_COLLECTION_NAME).withFloatVectors(Collections.singletonList(imageReverseSearchItem.getFeature()));
+        if (imageReverseSearchItem.getItemId() != null) {
+            builder = builder.withVectorIds(Collections.singletonList((imageReverseSearchItem.getItemId().longValue())));
         }
         InsertParam insertParam = builder.build();
         client.insert(insertParam);
@@ -121,7 +121,7 @@ public class MilvusService {
 
     public void deleteFeature(Integer imageId) {
         Response deleteByIdsResponse =
-                client.deleteEntityByID(MilvusInfo.DEEPIX_COLLECTION_NAME, "",Collections.singletonList(imageId.longValue()));
+                client.deleteEntityByID(MilvusInfo.DEEPIX_COLLECTION_NAME, "", Collections.singletonList(imageId.longValue()));
         client.flush(MilvusInfo.DEEPIX_COLLECTION_NAME);
     }
 }

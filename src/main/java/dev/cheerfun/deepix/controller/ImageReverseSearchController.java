@@ -1,6 +1,5 @@
 package dev.cheerfun.deepix.controller;
 
-import dev.cheerfun.deepix.domain.ImageLabelPredictResult;
 import dev.cheerfun.deepix.domain.ImageReverseSearchItem;
 import dev.cheerfun.deepix.domain.Result;
 import dev.cheerfun.deepix.service.FeatureExtractService;
@@ -32,31 +31,26 @@ public class ImageReverseSearchController {
     private final FeatureExtractService featureExtractService;
 
     @PostMapping("/images/{imageId}")
-    public ResponseEntity<Result<Boolean>> insertImageItem(@PathVariable("imageId") Integer imageId,@RequestParam("file") MultipartFile file, @RequestParam("extend") Map<String, Object> extendInfo) throws IOException, InterruptedException {
-        imageSearchService.insertImage(imageId,file.getInputStream(),extendInfo);
-        return ResponseEntity.ok().body(new Result<>("插入以图搜图条目成功",true));
+    public ResponseEntity<Result<Boolean>> insertImageItem(@PathVariable("imageId") Integer imageId, @RequestParam("file") MultipartFile file, @RequestParam("extend") Map<String, Object> extendInfo) throws IOException, InterruptedException {
+        imageSearchService.insertImage(imageId, file.getInputStream(), extendInfo);
+        return ResponseEntity.ok().body(new Result<>("插入以图搜图条目成功", true));
     }
 
     @PutMapping("/images/{imageId}")
-    public ResponseEntity<Result<Boolean>> updateImageItem(@PathVariable("imageId") Integer imageId,@RequestParam("file") MultipartFile file, @RequestParam("extend") Map<String, Object> extendInfo) throws IOException, InterruptedException {
-        imageSearchService.updateImageItem(imageId,file.getInputStream(),extendInfo);
-        return ResponseEntity.ok().body(new Result<>("更新以图搜图条目成功",true));
+    public ResponseEntity<Result<Boolean>> updateImageItem(@PathVariable("imageId") Integer imageId, @RequestParam("file") MultipartFile file, @RequestParam("extend") Map<String, Object> extendInfo) throws IOException, InterruptedException {
+        imageSearchService.updateImageItem(imageId, file.getInputStream(), extendInfo);
+        return ResponseEntity.ok().body(new Result<>("更新以图搜图条目成功", true));
     }
 
     @DeleteMapping("/images/{imageId}")
-    public ResponseEntity<Result<Boolean>> deleteImageItem(@PathVariable("imageId") Integer imageId) throws IOException, InterruptedException {
+    public ResponseEntity<Result<Boolean>> deleteImageItem(@PathVariable("imageId") Integer imageId) {
         imageSearchService.deleteImageItem(imageId);
-        return ResponseEntity.ok().body(new Result<>("删除以图搜图条目成功",true));
+        return ResponseEntity.ok().body(new Result<>("删除以图搜图条目成功", true));
     }
-
 
     @PostMapping("/images/similarImages")
-    public ResponseEntity<Result<List<ImageReverseSearchItem>>> queryTopKSimilarImage(@RequestParam("file") MultipartFile file,@RequestParam Integer k) throws IOException, InterruptedException {
-        return ResponseEntity.ok().body(new Result<>("获取以图搜图结果成功", imageSearchService.queryTopKSimilarImage(file.getInputStream(),k)));
+    public ResponseEntity<Result<List<ImageReverseSearchItem>>> queryTopKSimilarImage(@RequestParam("file") MultipartFile file, @RequestParam Integer k) throws IOException, InterruptedException {
+        return ResponseEntity.ok().body(new Result<>("获取以图搜图结果成功", imageSearchService.queryTopKSimilarImage(file.getInputStream(), k)));
     }
-
-
-
-
 
 }

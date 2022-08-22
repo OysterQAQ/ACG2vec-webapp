@@ -23,16 +23,8 @@ public class FeatureExtractService {
     private final TFServingService tfServingService;
     private final ImageLoadUtil imageLoadUtil;
 
-
-
-
     public Float[] generateImageFeature(InputStream inputStream) throws IOException, InterruptedException {
         return tfServingService.requestForFeatureExtract(imageLoadUtil.loadImage(inputStream));
     }
-
-
-
-
-
 
 }

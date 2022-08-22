@@ -36,38 +36,36 @@ public class TFServingService {
     @Value("${imageFeatureGenerate.TFServingServer}")
     private String TFServingServer;
 
-
     @PostConstruct
     public void init() {
         try {
             checkStatus();
             log.info("tf-serving服务初始化成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("tf-serving服务初始化失败");
             e.printStackTrace();
         }
 
     }
+
     public void checkStatus() throws IOException, InterruptedException {
-        URI uri = URI.create("http://" + TFServingServer + "/v1/models/"+TFServingInfo.FEATURE_EXTRACT_MODEL);
+        URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + TFServingInfo.FEATURE_EXTRACT_MODEL);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri).GET().build();
         String body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-
-    public  Float[] requestForFeatureExtract(INDArray image) throws IOException, InterruptedException {
+    public Float[] requestForFeatureExtract(INDArray image) throws IOException, InterruptedException {
         return request(image, TFServingInfo.FEATURE_EXTRACT_MODEL)[0];
     }
 
-    public  Float[][] requestForLabelPredict(INDArray image) throws IOException, InterruptedException {
+    public Float[][] requestForLabelPredict(INDArray image) throws IOException, InterruptedException {
         return request(image, TFServingInfo.LABEL_PREDICT_MODEL);
     }
 
-
     public Float[][] request(INDArray image, String modelName) throws IOException, InterruptedException {
         long l = System.currentTimeMillis();
-        URI uri = URI.create("http://" + TFServingServer + "/v1/models/"+modelName+":predict");
+        URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + modelName + ":predict");
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri).POST(HttpRequest.BodyPublishers.ofString("{\"instances\":" + image.toStringFull() + "}")).build();
         String body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -75,6 +73,5 @@ public class TFServingService {
         log.info("本次抽取耗时" + (System.currentTimeMillis() - l) / 1000F + "秒");
         return predictions.getPredictions();
     }
-
 
 }

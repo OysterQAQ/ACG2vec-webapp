@@ -38,24 +38,14 @@ public class ReverseImageSearchService {
     private final FeatureExtractService featureExtractService;
     private final ImageReverseSearchItemService imageReverseSearchItemService;
 
-
-
-
-
-
-
     public List<Integer> searchTopKIllustId(MultipartFile file) throws IOException, InterruptedException {
         return searchTopKIllustIdFromMilvus(featureExtractService.generateImageFeature(file.getInputStream()), 10);
     }
-
 
     //从Milvus中检索topk相似向量
     public List<Integer> searchTopKIllustIdFromMilvus(Float[] imageFeature, Integer k) {
         return milvusService.search(Arrays.asList(imageFeature), k);
     }
-
-
-
 
     private void saveImage(INDArray indArray) throws IOException {
 
@@ -90,7 +80,7 @@ public class ReverseImageSearchService {
     }
 
     public void insertImage(Integer imageId, InputStream inputStream, Map<String, Object> extendInfo) throws IOException, InterruptedException {
-        if (imageId==null||!imageReverseSearchItemService.checkImageReverseSearchItemById(imageId)) {
+        if (imageId == null || !imageReverseSearchItemService.checkImageReverseSearchItemById(imageId)) {
             final Float[] feature = featureExtractService.generateImageFeature(inputStream);
             final ImageReverseSearchItem imageReverseSearchItem = new ImageReverseSearchItem();
             imageReverseSearchItem.setItemId(imageId);
@@ -99,7 +89,6 @@ public class ReverseImageSearchService {
             imageReverseSearchItemService.addImageReverseSearchItem(imageReverseSearchItem);
             milvusService.saveFeatureToMilvus(imageReverseSearchItem);
         }
-
 
     }
 

@@ -25,7 +25,7 @@ public class MilvusConfig {
         try {
             ConnectParam connectParam = new ConnectParam.Builder().withHost(host).withPort(port).build();
             return new MilvusGrpcClient(connectParam);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
 
