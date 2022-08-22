@@ -4,6 +4,7 @@ import io.milvus.client.ConnectParam;
 import io.milvus.client.MilvusClient;
 import io.milvus.client.MilvusGrpcClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -19,7 +20,7 @@ public class MilvusConfig {
     @Value("${milvus.port}")
     private Integer port;
 
-    //@Bean
+    @Bean
     public MilvusClient milvusClient() {
         try {
             ConnectParam connectParam = new ConnectParam.Builder().withHost(host).withPort(port).build();

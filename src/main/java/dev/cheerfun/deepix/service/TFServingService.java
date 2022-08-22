@@ -30,7 +30,7 @@ import java.net.http.HttpResponse;
 public class TFServingService {
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
-    @Value("${imageFeatureGenerate.TFServingServer}")
+    @Value("${TFServingServer}")
     private String TFServingServer;
 
     @PostConstruct
@@ -50,6 +50,7 @@ public class TFServingService {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri).GET().build();
         String body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        log.info(body);
     }
 
     public Float[] requestForFeatureExtract(INDArray image) throws IOException, InterruptedException {

@@ -7,6 +7,6 @@ package dev.cheerfun.deepix.constant;
  * @description TFServingInfo
  */
 public class TFServingInfo {
-    public static final String FEATURE_EXTRACT_MODEL = "deepix_feature_extract";
-    public static final String LABEL_PREDICT_MODEL = "deepix_label_predict";
+    public static final String FEATURE_EXTRACT_MODEL = "feature_extract_model";
+    public static final String LABEL_PREDICT_MODEL = "label_predict_model";
 }

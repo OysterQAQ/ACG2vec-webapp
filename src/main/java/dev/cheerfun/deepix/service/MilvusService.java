@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * @date 2021/5/6 11:02 PM
  * @description Milvus初始化、检测、交互
  */
-//@Service
+@Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MilvusService {
