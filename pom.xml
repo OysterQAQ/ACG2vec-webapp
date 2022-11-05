@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dev.cheerfun.deepix</groupId>
-    <artifactId>deepix-webapp</artifactId>
+    <artifactId>acg2vec-webapp</artifactId>
     <version>1.0.0</version>
     <name>deepix-webapp</name>
     <description>deepix-webapp</description>
@@ -110,6 +110,11 @@
             <artifactId>datavec-data-image</artifactId>
             <version>1.0.0-beta7</version>
         </dependency>
+        <dependency>
+            <groupId>ai.djl.huggingface</groupId>
+            <artifactId>tokenizers</artifactId>
+            <version>0.19.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -123,6 +128,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>11</source>
+                    <encoding>UTF-8</encoding>
                     <target>11</target>
                     <skip>true</skip>
                 </configuration>
