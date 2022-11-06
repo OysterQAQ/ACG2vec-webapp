@@ -83,32 +83,16 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
-<!--        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>javacv-platform</artifactId>
-            <version>${javacv.version}</version>
-        </dependency>
-        &lt;!&ndash; https://mvnrepository.com/artifact/org.bytedeco.javacpp-presets/opencv &ndash;&gt;
-        <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>opencv</artifactId>
-            <version>${opencv.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>javacpp</artifactId>
-            <version>${javacv.version}</version>
-        </dependency>-->
-        <!-- https://mvnrepository.com/artifact/org.datavec/datavec-data-image -->
+
         <dependency>
             <groupId>org.nd4j</groupId>
             <artifactId>nd4j-native-platform</artifactId>
-            <version>1.0.0-beta7</version>
+            <version>1.0.0-M2.1</version>
         </dependency>
         <dependency>
             <groupId>org.datavec</groupId>
             <artifactId>datavec-data-image</artifactId>
-            <version>1.0.0-beta7</version>
+            <version>1.0.0-M2.1</version>
         </dependency>
         <dependency>
             <groupId>ai.djl.huggingface</groupId>

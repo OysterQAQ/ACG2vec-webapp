@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableCaching
 @EnableTransactionManagement
-
 public class ACG2VecWebappApplication {
 
     public static void main(String[] args) {
