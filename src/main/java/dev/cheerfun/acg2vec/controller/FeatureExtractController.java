@@ -30,7 +30,7 @@ public class FeatureExtractController {
         return ResponseEntity.ok().body(new Result<>("获取图片特征向量成功", featureExtractService.generateImageFeature(file.getInputStream())));
     }
 
-    @PostMapping("/text/features")
+    @PostMapping("/texts/features")
     public ResponseEntity<Result<Float[]>> generateTextFeature(@RequestParam("text") String text) throws IOException, InterruptedException {
         return ResponseEntity.ok().body(new Result<>("获取文本特征向量成功", featureExtractService.generateTextFeature(text)));
     }
