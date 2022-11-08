@@ -7,6 +7,7 @@ package dev.cheerfun.acg2vec.constant;
  * @description TFServingInfo
  */
 public class TFServingInfo {
-    public static final String FEATURE_EXTRACT_MODEL = "feature_extract_model";
-    public static final String LABEL_PREDICT_MODEL = "label_predict_model";
+    public static final String ILLUST_2_VEC = "illust2vec";
+    public static final String DEEPIX = "deepix";
+    public static final String ACGVOC_2_VEC = "acgvoc2vec";
 }
