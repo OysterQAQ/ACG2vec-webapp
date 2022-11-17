@@ -31,4 +31,11 @@ public class ImageLabelPredictController {
         return ResponseEntity.ok().body(new Result<>("获取图片标签成功", imageLabelPredictService.predict(file.getInputStream())));
     }
 
+
+    @PostMapping("/images/textLabels")
+    public ResponseEntity<Result<ImageLabelPredictResult>> getImageTextLabels(@RequestParam("file") MultipartFile file) throws IOException, InterruptedException {
+        //TODO 接入deepdanbooru
+        return null;
+    }
+
 }

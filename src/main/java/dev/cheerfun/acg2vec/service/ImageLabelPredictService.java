@@ -43,7 +43,7 @@ public class ImageLabelPredictService {
     @PostConstruct
     public void init() {
         try {
-            tagList = loadTextAsList("labelDict/tagList.txt");
+            //tagList = loadTextAsList("labelDict/tagList.txt");
             bookmarkLevelList = loadTextAsList("labelDict/bookmarkLevelList.txt");
             viewLevelList = loadTextAsList("labelDict/viewLevelList.txt");
             sanityLevelList = loadTextAsList("labelDict/sanityLevelList.txt");
@@ -65,7 +65,7 @@ public class ImageLabelPredictService {
         imageLabelPredictResult.setSanity(sanityLevelList.get(findMaxIndex(prediction.getSanityPredict())));
         imageLabelPredictResult.setRestrict(restrictLevelList.get(findMaxIndex(prediction.getRestrictPredict())));
         imageLabelPredictResult.setXRestrict(xRestrictLevelList.get(findMaxIndex(prediction.getXRestrictPredict())));
-        imageLabelPredictResult.setTagList(findIndexAbove(prediction.getTagPredict(), 0.5F).stream().map(i -> tagList.get(i)+":"+prediction.getTagPredict()[i]).collect(Collectors.toList()));
+        //imageLabelPredictResult.setTagList(findIndexAbove(prediction.getTagPredict(), 0.5F).stream().map(i -> tagList.get(i)+":"+prediction.getTagPredict()[i]).collect(Collectors.toList()));
         //imageLabelPredictResult.setTagList(Arrays.stream(findTopKIndex(prediction.getTagPredict(), 10)).mapToObj(i -> tagList.get(i)).collect(Collectors.toList()));
         return imageLabelPredictResult;
 
