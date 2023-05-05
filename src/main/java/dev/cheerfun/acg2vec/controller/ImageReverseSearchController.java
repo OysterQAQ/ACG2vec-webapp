@@ -2,9 +2,6 @@ package dev.cheerfun.acg2vec.controller;
 
 import dev.cheerfun.acg2vec.domain.ImageReverseSearchItem;
 import dev.cheerfun.acg2vec.domain.Result;
-import dev.cheerfun.acg2vec.service.FeatureExtractService;
-import dev.cheerfun.acg2vec.service.ImageReverseSearchItemService;
-import dev.cheerfun.acg2vec.service.ReverseImageSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

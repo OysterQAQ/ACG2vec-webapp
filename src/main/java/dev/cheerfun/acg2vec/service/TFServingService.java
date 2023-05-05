@@ -1,16 +1,15 @@
 package dev.cheerfun.acg2vec.service;
 
-import ai.djl.huggingface.tokenizers.Encoding;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.cheerfun.acg2vec.constant.TFServingInfo;
-import dev.cheerfun.acg2vec.domain.ImageLabelPrediction;
+
+import dev.cheerfun.acg2vec.constant.TFServingModelInfo;
 import dev.cheerfun.acg2vec.domain.Predictions;
+import dev.cheerfun.acg2vec.domain.TFServingReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.nd4j.linalg.api.ndarray.INDArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +18,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
 
 /**
  * @author OysterQAQ
@@ -27,7 +25,6 @@ import java.util.Arrays;
  * @date 2022/8/21 16:55
  * @description TFServing检测与交互
  */
-
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -40,7 +37,7 @@ public class TFServingService {
     @PostConstruct
     public void init() {
         try {
-            Thread.sleep(2*1000);
+            //Thread.sleep(2*1000);
             checkStatus();
             log.info("tf-serving服务初始化成功");
         } catch (Exception e) {
@@ -51,45 +48,35 @@ public class TFServingService {
     }
 
     public void checkStatus() throws IOException, InterruptedException {
-        URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + TFServingInfo.ILLUST_2_VEC);
+        URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + TFServingModelInfo.ILLUST_2_VEC);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri).GET().build();
         String body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         log.info(body);
     }
 
-    public Predictions<Float[]> requestForImageFeatureExtract(INDArray image) throws IOException, InterruptedException {
-        return objectMapper.readValue(request(image, TFServingInfo.ILLUST_2_VEC), new TypeReference<Predictions<Float[]>>() {
-        });
-    }
-
-    public Predictions<ImageLabelPrediction> requestForLabelPredict(INDArray image) throws IOException, InterruptedException {
-        return objectMapper.readValue( request(image, TFServingInfo.DEEPIX), new TypeReference<Predictions<ImageLabelPrediction>>() {
-        });
-    }
-
-    public String request(INDArray image, String modelName) throws IOException, InterruptedException {
-        long l = System.currentTimeMillis();
-        URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + modelName + ":predict");
+    public Predictions request(TFServingReq tfServingReq) {
+        URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + tfServingReq.getModelName() + ":predict");
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri).POST(HttpRequest.BodyPublishers.ofString("{\"instances\":" + image.toStringFull() + "}")).build();
-        String body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        log.info("本次抽取耗时" + (System.currentTimeMillis() - l) / 1000F + "秒");
-        return body;
+                .uri(uri).POST(HttpRequest.BodyPublishers.ofString(tfServingReq.getReqBody())).build();
+        //long l = System.currentTimeMillis();
+        String body = null;
+        try {
+            body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+            //log.info("本次抽取耗时" + (System.currentTimeMillis() - l) / 1000F + "秒");
+            Predictions predictions = (Predictions) objectMapper.readValue(body, tfServingReq.getRespType());
+            if (predictions.getPredictions() == null) {
+                log.error("tf-serving" + "请求出错");
+                log.error(body);
+                return null;
+            }
+            return predictions;
+        } catch (IOException | InterruptedException e) {
+            log.error("tf-serving" + "请求出错");
+            log.error(body);
+            return null;
+        }
+
     }
 
-    public String request(Encoding encode, String modelName) throws IOException, InterruptedException {
-        long l = System.currentTimeMillis();
-        URI uri = URI.create("http://" + TFServingServer + "/v1/models/" + modelName + ":predict");
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri).POST(HttpRequest.BodyPublishers.ofString("{\"instances\": [{\"input_ids\": " + Arrays.toString(encode.getWordIds())  +", \"attention_mask\": "+Arrays.toString(encode.getAttentionMask()) + "}]}")).build();
-        String body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        log.info("本次抽取耗时" + (System.currentTimeMillis() - l) / 1000F + "秒");
-        return body;
-    }
-
-    public Predictions<Float[]>  requestForTextFeatureExtract(Encoding encode) throws IOException, InterruptedException {
-        return objectMapper.readValue(request(encode, TFServingInfo.ILLUST_2_VEC), new TypeReference<Predictions<Float[]>>() {
-        });
-    }
 }

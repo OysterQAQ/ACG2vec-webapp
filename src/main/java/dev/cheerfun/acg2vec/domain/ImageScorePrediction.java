@@ -8,23 +8,17 @@ import lombok.NoArgsConstructor;
 /**
  * @author OysterQAQ
  * @version 1.0
- * @date 2022/8/22 14:58
- * @description ImageLabelPrediction
+ * @date 2023/4/6 20:31
+ * @description ImageScore
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageLabelPrediction {
+public class ImageScorePrediction {
     @JsonAlias({"bookmark_predict"})
     Float[] bookmarkPredict;
     @JsonAlias({"view_predict"})
     Float[] viewPredict;
     @JsonAlias({"sanity_predict"})
     Float[] sanityPredict;
-    @JsonAlias({"restrict_predict"})
-    Float[] restrictPredict;
-    @JsonAlias({"x_restrict_predict"})
-    Float[] xRestrictPredict;
-    @JsonAlias({"tag_predict"})
-    Float[] tagPredict;
 }

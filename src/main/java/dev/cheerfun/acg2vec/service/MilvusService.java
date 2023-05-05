@@ -1,13 +1,14 @@
 package dev.cheerfun.acg2vec.service;
 
 import com.google.gson.JsonObject;
+
 import dev.cheerfun.acg2vec.constant.MilvusInfo;
-import dev.cheerfun.acg2vec.domain.ImageReverseSearchItem;
 import dev.cheerfun.acg2vec.exception.BaseException;
 import io.milvus.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -31,22 +32,26 @@ public class MilvusService {
     @PostConstruct
     public void init() {
         try {
-            if (!hasCollection(MilvusInfo.DEEPIX_COLLECTION_NAME)) {
-                log.info("milvus向量索引进行首次创建");
-                createCollection(MilvusInfo.DEEPIX_COLLECTION_NAME, 1536, 2048);
-                createIndexForCollection(MilvusInfo.DEEPIX_COLLECTION_NAME, IndexType.IVF_SQ8, 4000 * 4145 * 4);
-                log.info("milvus向量索引首次创建成功");
-            }
-            log.info("当前集合内实体总数为：" + client.countEntities(MilvusInfo.DEEPIX_COLLECTION_NAME).getCollectionEntityCount());
-            Response getCollectionStatsResponse = client.getCollectionStats(MilvusInfo.DEEPIX_COLLECTION_NAME);
-            if (getCollectionStatsResponse.ok()) {
-                log.info("Collection Stats:" + getCollectionStatsResponse.getMessage());
-                log.info("Index Info:" + client.getIndexInfo(MilvusInfo.DEEPIX_COLLECTION_NAME).getIndex().get());
-            }
+            check(MilvusInfo.IMAGE_SEMANTIC_FEATURE, IndexType.IVF_SQ8, (int) (Math.sqrt(6000000) * 4), 1024);
+            check(MilvusInfo.HOT_1000000_TAG_SEMANTIC_FEATURE, IndexType.IVF_SQ8, (int) (Math.sqrt(100000) * 4), 512);
+
+
             log.info("milvus服务初始化成功");
         } catch (Exception e) {
             log.error("milvus服务初始化失败");
             e.printStackTrace();
+        }
+
+    }
+
+    public void check(String collectionName, IndexType indexType, Integer nlist, Integer dimension) {
+        if (!hasCollection(collectionName)) {
+            log.info("milvus " + collectionName + " 向量索引进行首次创建");
+            createCollection(collectionName, dimension, 2048);
+            createIndexForCollection(collectionName, indexType, nlist);
+            log.info("milvus " + collectionName + " 向量索引首次创建成功");
+        } else {
+            log.info("milvus " + collectionName + " 集合内实体总数为：" + client.countEntities(collectionName).getCollectionEntityCount());
         }
 
     }
@@ -80,11 +85,11 @@ public class MilvusService {
         client.flush(collectionName);
     }
 
-    public List<Integer> search(List<Float> vector, Integer k) {
+    public List<Long> search(String collectionName, List<Float> vector, Integer k, Integer nprobe) {
         JsonObject searchParamsJson = new JsonObject();
-        searchParamsJson.addProperty("nprobe", 256);
+        searchParamsJson.addProperty("nprobe", nprobe);
         SearchParam searchParam =
-                new SearchParam.Builder(MilvusInfo.DEEPIX_COLLECTION_NAME)
+                new SearchParam.Builder(collectionName)
                         .withFloatVectors(Collections.singletonList(normalizeVector(vector)))
                         .withTopK(k)
                         .withParamsInJson(searchParamsJson.toString())
@@ -94,35 +99,41 @@ public class MilvusService {
             List<List<SearchResponse.QueryResult>> queryResultsList =
                     searchResponse.getQueryResultsList();
             List<SearchResponse.QueryResult> queryResults = queryResultsList.get(0);
-            return queryResults.stream().mapToInt(e -> Math.toIntExact(e.getVectorId())).boxed().collect(Collectors.toList());
+            return queryResults.stream().mapToLong(e -> Math.toIntExact(e.getVectorId())).boxed().collect(Collectors.toList());
         } else {
-            throw new BaseException(HttpStatus.BAD_REQUEST, "以图搜图出错");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "向量搜索出错");
         }
     }
 
     //将特征向量存入Milvus
-    public Boolean saveFeatureToMilvus(ImageReverseSearchItem imageReverseSearchItem) {
-        //TODO 模型中使用激活函数进行归一化
-        imageReverseSearchItem.setFeature(normalizeVector(imageReverseSearchItem.getFeature()));
-        InsertParam.Builder builder = new InsertParam.Builder(MilvusInfo.DEEPIX_COLLECTION_NAME).withFloatVectors(Collections.singletonList(imageReverseSearchItem.getFeature()));
-        if (imageReverseSearchItem.getItemId() != null) {
-            builder = builder.withVectorIds(Collections.singletonList((imageReverseSearchItem.getItemId().longValue())));
-        }
+    public Boolean saveFeatureToMilvus(String collectionName, Long id, Float[] feature) {
+        List<Float> featureAfterL2N = normalizeVector(List.of(feature));
+        InsertParam.Builder builder = new InsertParam.Builder(collectionName).withFloatVectors(Collections.singletonList(featureAfterL2N));
+        builder = builder.withVectorIds(Collections.singletonList(id));
         InsertParam insertParam = builder.build();
         client.insert(insertParam);
         return true;
     }
 
-    private List<Float> normalizeVector(List<Float> vector) {
+    public Boolean saveFeatureToMilvus(String collectionName, Long id, List<Float> feature) {
+        List<Float> featureAfterL2N = normalizeVector(feature);
+        InsertParam.Builder builder = new InsertParam.Builder(collectionName).withFloatVectors(Collections.singletonList(featureAfterL2N));
+        builder = builder.withVectorIds(Collections.singletonList(id));
+        InsertParam insertParam = builder.build();
+        client.insert(insertParam);
+        return true;
+    }
+
+    public List<Float> normalizeVector(List<Float> vector) {
         float squareSum = vector.stream().map(x -> x * x).reduce((float) 0, Float::sum);
         final float norm = (float) Math.sqrt(squareSum);
         vector = vector.stream().map(x -> x / norm).collect(Collectors.toList());
         return vector;
     }
 
-    public void deleteFeature(Integer imageId) {
+    public void deleteFeature(String index, Long id) {
         Response deleteByIdsResponse =
-                client.deleteEntityByID(MilvusInfo.DEEPIX_COLLECTION_NAME, "", Collections.singletonList(imageId.longValue()));
-        client.flush(MilvusInfo.DEEPIX_COLLECTION_NAME);
+                client.deleteEntityByID(index, "", Collections.singletonList(id));
+
     }
 }

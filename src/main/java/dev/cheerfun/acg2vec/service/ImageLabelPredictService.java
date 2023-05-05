@@ -1,9 +1,6 @@
 package dev.cheerfun.acg2vec.service;
 
-import dev.cheerfun.acg2vec.domain.ImageLabelPredictResult;
-import dev.cheerfun.acg2vec.domain.ImageLabelPrediction;
 import dev.cheerfun.acg2vec.domain.Predictions;
-import dev.cheerfun.acg2vec.utils.ImageLoadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author OysterQAQ
