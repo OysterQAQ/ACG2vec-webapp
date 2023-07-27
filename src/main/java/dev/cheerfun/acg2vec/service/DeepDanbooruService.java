@@ -31,6 +31,7 @@ public class DeepDanbooruService {
 
     @PostConstruct
     public void init() throws IOException {
+        tagList=new ArrayList<>();
         //构建标签列表
         Scanner scanner = new Scanner(new ClassPathResource("deepdanbooru/tags.txt").getFile());
         while (scanner.hasNextLine()) {

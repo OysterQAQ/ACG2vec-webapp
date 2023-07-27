@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImageScorePrediction {
-    @JsonAlias({"bookmark_predict"})
+    @JsonAlias({"pix2score"})
     Float[] bookmarkPredict;
-    @JsonAlias({"view_predict"})
+    @JsonAlias({"pix2score_1"})
     Float[] viewPredict;
-    @JsonAlias({"sanity_predict"})
+    @JsonAlias({"pix2score_2"})
     Float[] sanityPredict;
 }
