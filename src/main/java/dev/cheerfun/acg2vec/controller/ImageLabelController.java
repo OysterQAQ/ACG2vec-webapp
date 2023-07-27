@@ -29,7 +29,7 @@ public class ImageLabelController {
 
     @PostMapping("/images/labelsByDeepDanbooru")
     public ResponseEntity<Result<List<String>>> queryImageLabelByDeepDanbooru(@RequestParam("image") MultipartFile file) throws IOException {
-        return ResponseEntity.ok().body(new Result<>("获取文本特征向量成功", deepDanbooruService.queryImageLabelByDeepDanbooru(file.getInputStream().readAllBytes())));
+        return ResponseEntity.ok().body(new Result<>("获取插画预测标签成功", deepDanbooruService.queryImageLabelByDeepDanbooru(file.getInputStream().readAllBytes())));
 
     }
 }

@@ -29,7 +29,7 @@ public class ImageScorePredictController {
     //预测插图分数
     @PostMapping("/images/socresByPix2Score")
     public ResponseEntity<Result<ImageScorePrediction>> queryImageScoreByPix2Score(@RequestParam("image") MultipartFile file) throws IOException {
-        return ResponseEntity.ok().body(new Result<>("获取文本特征向量成功", imageScoreService.extractImageScore(file.getInputStream().readAllBytes())));
+        return ResponseEntity.ok().body(new Result<>("获取插画预测分数成功", imageScoreService.extractImageScore(file.getInputStream().readAllBytes())));
     }
 
 
