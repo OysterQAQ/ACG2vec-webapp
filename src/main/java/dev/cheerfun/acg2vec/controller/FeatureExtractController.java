@@ -1,8 +1,7 @@
 package dev.cheerfun.acg2vec.controller;
 
 import dev.cheerfun.acg2vec.domain.Result;
-import dev.cheerfun.acg2vec.service.ImageFeatureExtractService;
-import dev.cheerfun.acg2vec.service.TagFeatureExtractService;
+import dev.cheerfun.acg2vec.service.FeatureExtractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +23,29 @@ import java.io.IOException;
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FeatureExtractController {
-    private final ImageFeatureExtractService imageFeatureExtractService;
-    private final TagFeatureExtractService tagFeatureExtractService;
+    private final FeatureExtractService featureExtractService;
 
-    @PostMapping("/images/features")
-    public ResponseEntity<Result<Float[]>> generateImageFeature(@RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok().body(new Result<>("获取图片特征向量成功", imageFeatureExtractService.extractImageSemanticsFeature(file.getInputStream().readAllBytes())));
+    @PostMapping("/models/illust2vec/feature")
+    public ResponseEntity<Result<Float[]>> queryImageFeatureByIllust2Vec(@RequestParam("image") MultipartFile file) throws IOException {
+        return ResponseEntity.ok().body(new Result<>("获取illust2vec图片特征向量成功", featureExtractService.extractImageSemanticsFeature(file.getInputStream().readAllBytes())));
     }
 
-    @PostMapping("/texts/features")
-    public ResponseEntity<Result<Float[]>> generateTextFeature(@RequestParam("text") String text) throws IOException, InterruptedException {
-        return ResponseEntity.ok().body(new Result<>("获取文本特征向量成功", tagFeatureExtractService.extractTagFeature(text)));
+    @PostMapping("/models/acgvoc2vec/feature")
+    public ResponseEntity<Result<Float[]>> queryTextFeatureByAcgVoc2Vec(@RequestParam("text") String text) throws IOException, InterruptedException {
+        return ResponseEntity.ok().body(new Result<>("获取acgvoc2vec文本特征向量成功", featureExtractService.extractTagFeature(text)));
     }
+
+    @PostMapping("/models/dclip_text/feature")
+    public ResponseEntity<Result<Float[]>> queryTextFeatureByDclipText(@RequestParam("text") String text) throws IOException, InterruptedException {
+        return ResponseEntity.ok().body(new Result<>("获取clip文本特征向量成功", featureExtractService.extractTextFeatureByDCLIP(text)));
+    }
+
+
+    @PostMapping("/models/dclip_image/feature")
+    public ResponseEntity<Result<Float[]>> queryImageFeatureByDclipText(@RequestParam("image") MultipartFile file) throws IOException, InterruptedException {
+       // return ResponseEntity.ok().body(new Result<>("获取文本特征向量成功", tagFeatureExtractService.extractTagFeature(text)));
+        return null;
+    }
+
 
 }

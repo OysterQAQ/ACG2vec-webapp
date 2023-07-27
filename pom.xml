@@ -21,6 +21,8 @@
         <commons-io.version>2.11.0</commons-io.version>
         <javacv.version>1.5.7</javacv.version>
         <opencv.version>4.0.1-1.4.4</opencv.version>
+        <jproc.version>2.5.1</jproc.version>
+
     </properties>
     <dependencies>
         <dependency>
@@ -83,7 +85,11 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.buildobjects</groupId>
+            <artifactId>jproc</artifactId>
+            <version>${jproc.version}</version>
+        </dependency>
         <dependency>
             <groupId>ai.djl.huggingface</groupId>
             <artifactId>tokenizers</artifactId>

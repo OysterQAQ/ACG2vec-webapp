@@ -15,8 +15,8 @@ import java.util.Base64;
  */
 @Data
 @AllArgsConstructor
-public class TFServingImageScoreFeatureExtractReq implements TFServingReq {
-    private final static String MODEL_NAME = TFServingModelInfo.PIX_2_SCORE;
+public class TFServingImageLabelPredictReq implements TFServingReq {
+    private final static String MODEL_NAME = TFServingModelInfo.DEEP_DANBOORU;
 
     private byte[] image;
 
@@ -32,7 +32,7 @@ public class TFServingImageScoreFeatureExtractReq implements TFServingReq {
 
     @Override
     public TypeReference getRespType() {
-        return new TypeReference<Predictions<ImageScorePrediction>>() {
+        return new TypeReference<Predictions<Float[]>>() {
         };
     }
 }

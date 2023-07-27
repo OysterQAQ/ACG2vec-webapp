@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @date 2021/5/6 11:02 PM
  * @description Milvus初始化、检测、交互
  */
-@Service
+//@Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MilvusService {

@@ -1,13 +1,11 @@
 package dev.cheerfun.acg2vec.service;
 
-
-import dev.cheerfun.acg2vec.constant.MilvusInfo;
-import dev.cheerfun.acg2vec.domain.TFServingTagFeatureExtractReq;
+import dev.cheerfun.acg2vec.domain.*;
+import dev.cheerfun.acg2vec.utils.CLIPTokenizer;
 import dev.cheerfun.acg2vec.utils.SentenceTransformersTokenizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,20 +13,45 @@ import java.util.List;
 /**
  * @author OysterQAQ
  * @version 1.0
- * @date 2023/1/31 14:25
- * @description TagFeatureExtractService
+ * @date 2023/7/27 09:33
+ * @description FeatureExtractService
  */
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TagFeatureExtractService {
+public class FeatureExtractService {
+
     private final TFServingService tfServingService;
     private final SentenceTransformersTokenizer sentenceTransformersTokenizer;
-    private final MilvusService milvusService;
+    private final CLIPTokenizer clipTokenizer;
+
+    public Float[] extractImageSemanticsFeature(byte[] image) {
+        final Predictions predictions = tfServingService.request(new TFServingImageSemanticsFeatureExtractReq(image));
+        if (predictions.getPredictions() == null) {
+            return null;
+        }
+        return (Float[]) predictions.getPredictions().get(0);
+
+    }
+
+//    public Float[] extractImageSemanticsFeatureByDCLIP(byte[] image) {
+//        final Predictions predictions = tfServingService.request(new TFServingCLIPImageFeatureExtractReq(image));
+//        if (predictions.getPredictions() == null) {
+//            return null;
+//        }
+//        return (Float[]) predictions.getPredictions().get(0);
+//
+//    }
+
 
 
     public Float[] extractTagFeature(String sentence) {
         return (Float[]) tfServingService.request(new TFServingTagFeatureExtractReq(false, sentenceTransformersTokenizer.encode(sentence))).getPredictions().get(0);
+
+    }
+
+    public Float[] extractTextFeatureByDCLIP(String sentence) {
+        return (Float[]) tfServingService.request(new TFServingCLIPTextFeatureExtractReq(false, clipTokenizer.encode(sentence))).getPredictions().get(0);
 
     }
 

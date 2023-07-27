@@ -14,8 +14,8 @@ import java.util.Arrays;
  * @description TFServingTagFeatureExractReq
  */
 @Data
-public class TFServingTagFeatureExtractReq implements TFServingReq {
-    private final static String MODEL_NAME = TFServingModelInfo.ACGVOC_2_VEC;
+public class TFServingCLIPTextFeatureExtractReq implements TFServingReq {
+    private final static String MODEL_NAME = TFServingModelInfo.DCLIP_TEXT;
 
     private Encoding encode;
 
@@ -36,23 +36,24 @@ public class TFServingTagFeatureExtractReq implements TFServingReq {
         if (batching) {
             final StringBuilder body = new StringBuilder(pre);
             for (int i = 0; i < encodeArray.length; i++) {
-                body.append("{\"input_ids\": " + Arrays.toString(paddingOrTruncate(encodeArray[i].getIds())) + ", \"attention_mask\": " + Arrays.toString(paddingOrTruncate(encodeArray[i].getAttentionMask())) + "},");
+                body.append(Arrays.toString(paddingOrTruncate(encodeArray[i].getIds())));
+                body.append(",");
             }
             body.deleteCharAt(body.length() - 1);
             body.append(pos);
 
             return body.toString();
         }
-        return "{\"instances\": [{\"input_ids\": " + Arrays.toString(paddingOrTruncate(encode.getIds())) + ", \"attention_mask\": " + Arrays.toString(paddingOrTruncate(encode.getAttentionMask())) + "}]}";
+        return pre + Arrays.toString(paddingOrTruncate(encode.getIds())) + pos;
     }
 
     public long[] paddingOrTruncate(long[] input) {
-        final long[] result = new long[128];
-        if (input.length < 128) {
+        final long[] result = new long[77];
+        if (input.length < 77) {
             System.arraycopy(input, 0, result, 0, input.length);
         } else {
-            System.arraycopy(input, 0, result, 0, 127);
-            result[127] = input[input.length - 1];
+            System.arraycopy(input, 0, result, 0, 76);
+            result[76] = input[input.length - 1];
         }
         return result;
     }
@@ -63,12 +64,12 @@ public class TFServingTagFeatureExtractReq implements TFServingReq {
         };
     }
 
-    public TFServingTagFeatureExtractReq(Boolean batching, Encoding encode) {
+    public TFServingCLIPTextFeatureExtractReq(Boolean batching, Encoding encode) {
         this.encode = encode;
         this.batching = batching;
     }
 
-    public TFServingTagFeatureExtractReq(Boolean batching, Encoding[] encodeArray) {
+    public TFServingCLIPTextFeatureExtractReq(Boolean batching, Encoding[] encodeArray) {
         this.batching = batching;
         this.encodeArray = encodeArray;
     }

@@ -1,6 +1,7 @@
 package dev.cheerfun.acg2vec.domain;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import dev.cheerfun.acg2vec.constant.TFServingModelInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -15,7 +16,7 @@ import java.util.Base64;
 @Data
 @AllArgsConstructor
 public class TFServingImageSemanticsFeatureExtractReq implements TFServingReq {
-    private final static String MODEL_NAME = "img_semantics_feature_extract_model";
+    private final static String MODEL_NAME = TFServingModelInfo.IMG_SEMANTICS_FEATURE_EXTRACT_MODEL;
 
     private byte[] image;
 

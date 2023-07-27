@@ -13,17 +13,17 @@ import java.util.List;
 /**
  * @author OysterQAQ
  * @version 1.0
- * @date 2022/11/5 22:05
- * @description SentenceTransformersTokenizer
+ * @date 2023/5/8 18:37
+ * @description CLIPTokenizer
  */
 @Component
-public class SentenceTransformersTokenizer {
+public class CLIPTokenizer {
     HuggingFaceTokenizer tokenizer;
 
     @PostConstruct
     public void init() throws IOException {
         //HuggingFaceTokenizer.builder().
-        tokenizer = HuggingFaceTokenizer.newInstance(new ClassPathResource("tokenizer/SentenceTransformersTokenizer.json").getInputStream(), null);
+        tokenizer = HuggingFaceTokenizer.newInstance(new ClassPathResource("tokenizer/CLIPTokenizer.json").getInputStream(), null);
     }
 
     public Encoding encode(String sentence) {
@@ -33,5 +33,4 @@ public class SentenceTransformersTokenizer {
     public Encoding[] encodeList(List<String> sentence) {
         return tokenizer.batchEncode(sentence);
     }
-
 }

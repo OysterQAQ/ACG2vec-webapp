@@ -67,12 +67,14 @@ public class TFServingService {
             Predictions predictions = (Predictions) objectMapper.readValue(body, tfServingReq.getRespType());
             if (predictions.getPredictions() == null) {
                 log.error("tf-serving" + "请求出错");
+                log.error(tfServingReq.getReqBody());
                 log.error(body);
                 return null;
             }
             return predictions;
         } catch (IOException | InterruptedException e) {
             log.error("tf-serving" + "请求出错");
+            log.error(tfServingReq.getReqBody());
             log.error(body);
             return null;
         }
